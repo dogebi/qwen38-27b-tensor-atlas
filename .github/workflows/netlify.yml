@@ -10,7 +10,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - run: npm i -g netlify-cli@17
+      # netlify-cli pulls sharp, whose native build fails sporadically on the runner and is
+      # not needed to deploy a static folder
+      - run: npm i -g netlify-cli@17 --ignore-scripts
       - run: netlify deploy --prod --dir . --site "$(cat .netlify_site_id)"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
