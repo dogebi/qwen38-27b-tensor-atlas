@@ -1,3 +1,5 @@
 .netlify/
 __pycache__/
 *.pyc
+*.measured.json
+hf-tree-*.json
