@@ -225,7 +225,7 @@ const ENGRAM=[];                       /* no Engram memory in this model */
 const DRAFT=[];                        /* no DSpark stages in this model */
 const EMBED={id:'embed',label:'Token embedding',ws:[W('model.language_model.embed_tokens.weight',[248320,5120],'embed','2.54 GB, untied from the head. BF16 in both builds — every token touches it.')]};
 const HEAD={id:'head',label:'LM head',ws:[W('model.language_model.norm.weight',[5120],'norm','final RMSNorm'),W('lm_head.weight',[248320,5120],'head','Untied 5,120 -> 248,320 logits. Kept BF16 by the FP8 build.')]};
-const MTP={id:'mtp',label:'MTP head',ws:MTP_W};
+const MTP={id:'mtp',label:'MTP head',index:64,ws:MTP_W};
 const VISION={id:'vision',label:'Vision tower',ws:VISION_W};
 const MODULES=[EMBED,...LAYERS,HEAD,MTP,VISION];
 const ALL_W=MODULES.flatMap(m=>m.ws);

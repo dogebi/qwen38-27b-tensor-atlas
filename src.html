@@ -667,7 +667,7 @@ class AtlasEngine{
    const width=Math.min(330,this.w-16),height=this.tip.offsetHeight||170;this.tip.style.width=width+'px';this.tip.style.left=clamp(this.mx+17,8,this.w-width-8)+'px';this.tip.style.top=clamp(this.my+18,8,this.h-height-8)+'px';
   }
  loop(now){if(document.hidden){this.last=now;this.raf=requestAnimationFrame(this.loop);return;}if(this.w<600&&this.lastRendered&&now-this.lastRendered<32){this.raf=requestAnimationFrame(this.loop);return;}this.lastRendered=now;this.frameNo++;let dt=Math.min(.05,Math.max(.001,(now-this.last)/1000));this.last=now;this.damp=1-Math.exp(-dt*10);if(this.state.playing&&!document.hidden){this.clock+=dt*this.state.speed;const phase=phaseAt(this.time,this.state.activity),next=this.time+dt*this.state.speed;this.time=this.state.loopPhase?phase.from+(next-phase.from)%(phase.to-phase.from):next%22;}const targetDeck=this.state.layout==='split'?1:0;this.deck=this.reduced?targetDeck:clamp(this.deck+Math.sign(targetDeck-this.deck)*Math.min(Math.abs(targetDeck-this.deck),dt/1.35),0,1);this.camera(dt);this.boxes=[];this.lines=[];this.points=[];this.labels=[];this.detailLabels=[];
-  if(this.state.view==='storage')this.storage();else if(this.state.view==='cache')this.cache();else this.architecture();
+  try{if(this.state.view==='storage')this.storage();else if(this.state.view==='cache')this.cache();else this.architecture();}catch(err){if(!this.viewError){this.viewError=1;console.error('atlas: '+this.state.view+' view failed:',err);}}
   this.updateTooltip();this.renderer.render(this.boxes,this.lines,this.points,this.vp,this.eye);this.commitLabels();this.commitDetailLabels();if(now-this.lastTick>140){this.cb.tick(this.time);this.lastTick=now;}
   this.raf=requestAnimationFrame(this.loop);
  }
