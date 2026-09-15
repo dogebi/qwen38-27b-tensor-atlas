@@ -604,6 +604,10 @@ def main() -> int:
           f"→ {bf_total/f8_total:.3f}x")
     print(f"page renders {page_bf/1e9:.4f} GB / {page_f8/1e9:.4f} GB — page total == measured payload ✔")
     print(f"modules {len(t['lin'])} linear tensors · {len(t['full'])} full · vision {len(t['vis'])} groups")
+
+    # the NTT internal badge + copyright footer are part of the published page
+    import badge
+    print("badge ·", badge.inject(OUT))
     return 0
 
 
