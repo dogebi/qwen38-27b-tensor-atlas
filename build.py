@@ -579,6 +579,21 @@ def main() -> int:
                 ln = html[: m.start()].count("\n") + 1
                 print(f"  residue '{needle}' L{ln}: " + html[max(0, m.start() - 70): m.end() + 70].replace("\n", "\\n")[:170])
 
+    # WebMCP tools: webmcp-tools.js 를 자리표시자에 인라인 주입(외부 스크립트 미사용 → CSP 원문 유지)
+    _wm = DIR / "webmcp-tools.js"
+    if "@@WEBMCP@@" in html:
+        if not _wm.exists():
+            print("RESIDUE FAIL: webmcp-tools.js missing", file=sys.stderr)
+            return 9
+        _code = _wm.read_text(encoding="utf-8").rstrip() + "\n"
+        if "</script" in _code.lower():
+            print("RESIDUE FAIL: webmcp-tools.js contains </script", file=sys.stderr)
+            return 9
+        html = html.replace("@@WEBMCP@@", _code)
+        if "@@WEBMCP@@" in html:
+            print("RESIDUE FAIL: WebMCP placeholder not fully replaced", file=sys.stderr)
+            return 9
+        print(f"webmcp · inlined {len(_code):,} B of tools")
     OUT.write_text(html, encoding="utf-8")
 
     # structural guards
